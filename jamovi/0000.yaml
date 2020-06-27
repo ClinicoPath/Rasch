@@ -1,0 +1,24 @@
+---
+title: Measurement Model for jamovi
+name: rasch
+version: 0.0.1
+jms: '1.0'
+authors:
+  - Hyunsoo Seol
+maintainer: Hyunsoo Seol <snow@cau.ac.kr>
+date: '2020-06-27'
+type: R
+description: >-
+  More about what it does (maybe more than one line) Use four spaces when
+  indenting paragraphs within the Description.
+analyses:
+  - title: Dichotomous Model
+    name: dichotomous
+    ns: rasch
+    menuGroup: Rasch
+    menuTitle: Dichotomous Model
+    menuSubgroup: Dichotomous
+usesNative: true
+minApp: 1.0.8
+
+...

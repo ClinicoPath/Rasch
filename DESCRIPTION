@@ -1,0 +1,21 @@
+Package: Rasch
+Type: Package
+Title: Dichotomous Model
+Version: 0.0.1
+Date: 2020-06-27
+Author: Hyunsoo Seol
+Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
+Description: Rasch Dichotomous Model
+License: GPL3
+LazyData: TRUE
+Encoding: UTF-8
+RoxygenNote: 7.1.0
+Imports:
+    jmvcore (>= 0.8),
+    R6,
+    stats,
+    magrittr,
+    tidyverse,
+    TAM,
+    eRm    
+
