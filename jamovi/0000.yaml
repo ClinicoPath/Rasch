@@ -1,6 +1,6 @@
 ---
 title: Measurement Model for jamovi
-name: rasch
+name: Rasch
 version: 0.0.1
 jms: '1.0'
 authors:
@@ -14,7 +14,7 @@ description: >-
 analyses:
   - title: Dichotomous Model
     name: dichotomous
-    ns: rasch
+    ns: Rasch
     menuGroup: Rasch
     menuTitle: Dichotomous Model
     menuSubgroup: Dichotomous

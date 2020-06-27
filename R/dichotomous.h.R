@@ -7,11 +7,11 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            pmeasure = TRUE,
-            imeasure = TRUE, ...) {
+            pmeasure = FALSE,
+            imeasure = FALSE, ...) {
 
             super$initialize(
-                package='rasch',
+                package='Rasch',
                 name='dichotomous',
                 requiresData=TRUE,
                 ...)
@@ -26,11 +26,11 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..pmeasure <- jmvcore::OptionBool$new(
                 "pmeasure",
                 pmeasure,
-                default=TRUE)
+                default=FALSE)
             private$..imeasure <- jmvcore::OptionBool$new(
                 "imeasure",
                 imeasure,
-                default=TRUE)
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..pmeasure)
@@ -49,7 +49,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
 dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
-        text1 = function() private$.items[["text1"]]),
+        instructions = function() private$.items[["instructions"]],
+        text1 = function() private$.items[["text1"]],
+        text2 = function() private$.items[["text2"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -57,9 +59,18 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="",
                 title="Dichotomous Model")
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="instructions",
+                title="Instructions",
+                visible=TRUE))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text1",
+                title="Dichotomous Model"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text2",
                 title="Dichotomous Model"))}))
 
 dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -68,7 +79,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(options, data=NULL, datasetId="", analysisId="", revision=0) {
             super$initialize(
-                package = 'rasch',
+                package = 'Rasch',
                 name = 'dichotomous',
                 version = c(1,0,0),
                 options = options,
@@ -91,15 +102,17 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param imeasure .
 #' @return A results object containing:
 #' \tabular{llllll}{
+#'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
 #' }
 #'
 #' @export
 dichotomous <- function(
     data,
     vars,
-    pmeasure = TRUE,
-    imeasure = TRUE) {
+    pmeasure = FALSE,
+    imeasure = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dichotomous requires jmvcore to be installed (restart may be required)')

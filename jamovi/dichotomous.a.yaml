@@ -24,12 +24,12 @@ options:
     - name: pmeasure
       title: Person
       type: Bool
-      default: True
+      default: false
 
     - name: imeasure
       title: Item
       type: Bool
-      default: True
+      default: false
 
 
 ...

@@ -4,7 +4,7 @@
 \alias{dichotomous}
 \title{Dichotomous Model}
 \usage{
-dichotomous(data, vars, pmeasure = TRUE, imeasure = TRUE)
+dichotomous(data, vars, pmeasure = FALSE, imeasure = FALSE)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -18,7 +18,9 @@ dichotomous(data, vars, pmeasure = TRUE, imeasure = TRUE)
 \value{
 A results object containing:
 \tabular{llllll}{
+  \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
 }
 }
 \description{

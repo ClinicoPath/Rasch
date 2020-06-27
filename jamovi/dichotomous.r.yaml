@@ -4,8 +4,15 @@ title: Dichotomous Model
 jrs:   '1.1'
 
 items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
     - name:  text1
       title: Dichotomous Model
       type:  Preformatted
+    - name:  text2
+      title: Dichotomous Model
+      type:  Preformatted      
      
 ...

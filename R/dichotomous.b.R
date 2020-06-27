@@ -5,6 +5,7 @@
 #' @importFrom R6 R6Class
 #' @import jmvcore
 #' @importFrom eRm RM 
+#' @importFrom TAM tam.jml
 #' @export
 
 
@@ -60,10 +61,10 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
       vars <- self$options$get('vars')
 
-      mydata <- self$data
+      data <- self$data
       
-  #    for(v in vars)
-  #    data[[v]] <- jmvcore::toNumeric(data[[v]])
+      for(v in vars)
+      data[[v]] <- jmvcore::toNumeric(data[[v]])
       
                     
 # compute person and item measure with TAM package--------
@@ -72,19 +73,21 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       # estimate the Rasch model with JML (function 'tam.jml')
       
       # estimate person measure
-     # person <- TAM::tam.jml(resp=data)$theta             
+      person <- TAM::tam.jml(resp=data)$theta             
                     
      # estimate item measure
-     # item <-  TAM::tam.jml(resp=data)$item
+      item <-  TAM::tam.jml(resp=data)$item
       
 # eRm package------------
       
-      res<- eRm::RM(mydata)$betapar
+   #   res<- eRm::RM(mydata)$betapar
       
       
 # populate result----------------------------
       
-      self$results$text1$setContent(res)
+      self$results$text1$setContent(person)
+      
+      self$results$text2$setContent(item)
       
       # self$results$text2$setContent(item)
  
