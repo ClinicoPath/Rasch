@@ -4,14 +4,14 @@
 \alias{dichotomous}
 \title{Dichotomous Model}
 \usage{
-dichotomous(data, vars, pmeasure = FALSE, imeasure = FALSE)
+dichotomous(data, vars, itotal = TRUE, imeasure = TRUE)
 }
 \arguments{
 \item{data}{The data as a data frame.}
 
 \item{vars}{.}
 
-\item{pmeasure}{.}
+\item{itotal}{.}
 
 \item{imeasure}{.}
 }
@@ -19,9 +19,14 @@ dichotomous(data, vars, pmeasure = FALSE, imeasure = FALSE)
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
-  \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$items} \tab \tab \tab \tab \tab a table \cr
 }
+
+Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+
+\code{results$items$asDF}
+
+\code{as.data.frame(results$items)}
 }
 \description{
 Dichotomous Model

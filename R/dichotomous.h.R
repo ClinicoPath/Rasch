@@ -7,8 +7,8 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            pmeasure = FALSE,
-            imeasure = FALSE, ...) {
+            itotal = TRUE,
+            imeasure = TRUE, ...) {
 
             super$initialize(
                 package='Rasch',
@@ -23,26 +23,26 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                     "continuous"),
                 permitted=list(
                     "numeric"))
-            private$..pmeasure <- jmvcore::OptionBool$new(
-                "pmeasure",
-                pmeasure,
-                default=FALSE)
+            private$..itotal <- jmvcore::OptionBool$new(
+                "itotal",
+                itotal,
+                default=TRUE)
             private$..imeasure <- jmvcore::OptionBool$new(
                 "imeasure",
                 imeasure,
-                default=FALSE)
+                default=TRUE)
 
             self$.addOption(private$..vars)
-            self$.addOption(private$..pmeasure)
+            self$.addOption(private$..itotal)
             self$.addOption(private$..imeasure)
         }),
     active = list(
         vars = function() private$..vars$value,
-        pmeasure = function() private$..pmeasure$value,
+        itotal = function() private$..itotal$value,
         imeasure = function() private$..imeasure$value),
     private = list(
         ..vars = NA,
-        ..pmeasure = NA,
+        ..itotal = NA,
         ..imeasure = NA)
 )
 
@@ -50,8 +50,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text1 = function() private$.items[["text1"]],
-        text2 = function() private$.items[["text2"]]),
+        items = function() private$.items[["items"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -64,14 +63,28 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Table$new(
                 options=options,
-                name="text1",
-                title="Dichotomous Model"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text2",
-                title="Dichotomous Model"))}))
+                name="items",
+                title="Item Statistics",
+                visible="(itotal || imeasure)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars"),
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="score", 
+                        `title`="total", 
+                        `visible`="(itotal)"),
+                    list(
+                        `name`="measure", 
+                        `title`="measure", 
+                        `visible`="(imeasure)"))))}))
 
 dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "dichotomousBase",
@@ -98,21 +111,26 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
-#' @param pmeasure .
+#' @param itotal .
 #' @param imeasure .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$items$asDF}
+#'
+#' \code{as.data.frame(results$items)}
 #'
 #' @export
 dichotomous <- function(
     data,
     vars,
-    pmeasure = FALSE,
-    imeasure = FALSE) {
+    itotal = TRUE,
+    imeasure = TRUE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dichotomous requires jmvcore to be installed (restart may be required)')
@@ -126,7 +144,7 @@ dichotomous <- function(
 
     options <- dichotomousOptions$new(
         vars = vars,
-        pmeasure = pmeasure,
+        itotal = itotal,
         imeasure = imeasure)
 
     analysis <- dichotomousClass$new(

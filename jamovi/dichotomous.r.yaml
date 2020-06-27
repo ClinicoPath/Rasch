@@ -8,11 +8,28 @@ items:
       title: Instructions
       type: Html
       visible: True
-    - name:  text1
-      title: Dichotomous Model
-      type:  Preformatted
-    - name:  text2
-      title: Dichotomous Model
-      type:  Preformatted      
+
+    - name:  items
+      title: Item Statistics
+      type:  Table
+      visible: (itotal || imeasure)
+      rows: (vars)
+      clearWith:
+        - vars
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: score
+          title: total
+          visible: (itotal)
+
+        - name: measure
+          title: measure
+          visible: (imeasure)        
+   
      
 ...

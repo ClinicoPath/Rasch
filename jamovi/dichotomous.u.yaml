@@ -20,13 +20,13 @@ children:
     margin: large
     children:
       - type: Label
-        label: Measure
+        label: Item Statistics
         fitToGrid: true
         cell:
           column: 0
           row: 0
         children:
           - type: CheckBox
-            name: pmeasure
+            name: itotal
           - type: CheckBox
             name: imeasure

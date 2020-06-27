@@ -42,6 +42,9 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             </body>
             </html>"
   )
+  
+#  private$.initItemsTable()
+  
   if (length(self$options$vars) <= 1)
     self$setStatus('complete')
 },
@@ -59,38 +62,104 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
 # get variables---------------------------------
       
-      vars <- self$options$get('vars')
+    data <- self$data  
+    
+    vars <- self$options$get('vars')
 
-      data <- self$data
       
       for(v in vars)
       data[[v]] <- jmvcore::toNumeric(data[[v]])
       
                     
-# compute person and item measure with TAM package--------
+# compute item measure with TAM package--------
       
+    ready <- TRUE
+    
+    if (is.null(self$options$vars) || length(self$options$vars) < 2)
+      ready <- FALSE
+    
+    if (ready) {
+      
+ 
+      results <- private$.compute(data)
+      
+ #     private$.populateItemsTable(results)
+      
+      private$.populateItemsTable(results)
+   
      
+    }
+  },
+
+
+# compute results---------------------------
+    
+.compute = function(data) {
+  
+  
       # estimate the Rasch model with JML (function 'tam.jml')
       
-      # estimate person measure
-      person <- TAM::tam.jml(resp=data)$theta             
+      # estimate Item Total Score
+  
+      itotal <- TAM::tam.jml(resp=data)$ItemScore             
                     
-     # estimate item measure
-      item <-  TAM::tam.jml(resp=data)$item
+     # estimate item difficulty measure
+      
+      imeasure <-  TAM::tam.jml(resp=data)$xsi
       
 # eRm package------------
       
    #   res<- eRm::RM(mydata)$betapar
+  
+  
+      return(list('itotal'=itotal, 'imeasure'=imeasure))
       
+  },
+
+#### Init tables -----------------
+   
+   .initItemsTable = function() {
+        
+        table <- self$results$items
+        
+        for (i in seq_along(items))
+          table$addFootnote(rowKey=items[i], 'name')
+        
+      },      
       
-# populate result----------------------------
-      
-      self$results$text1$setContent(person)
-      
-      self$results$text2$setContent(item)
-      
-      # self$results$text2$setContent(item)
  
+
+      
+# populate item tables----------------------------
+      
+.populateItemsTable = function(results) {
+  
+  table <- self$results$items
+  
+  items <- self$options$vars
+  
+ 
+  itotal <- results$itotal
+  imeasure <- results$imeasure
+  
+  for (i in seq_along(items)) {
+    
+    row <- list()
+
+    
+    row[["score"]] <- itotal[items[[i]]]
+    
+    row[["measure"]] <- imeasure[items[[i]]]
+ #   row[["itemRestCor"]] <- alpha$item.stats[items[i],"r.drop"]
+#    row[["omega"]] <- omegaDrop[i]
+    
+    table$setRow(rowKey=items[i], values=row)
+  }
+
+     
                     
-        })
+        }
+
+
+)
 )

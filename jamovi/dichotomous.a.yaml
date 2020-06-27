@@ -21,15 +21,15 @@ options:
       permitted:
         - numeric        
 
-    - name: pmeasure
-      title: Person
+    - name: itotal
+      title: Total Score
       type: Bool
-      default: false
+      default: True
 
     - name: imeasure
-      title: Item
+      title: Item measure
       type: Bool
-      default: false
+      default: True
 
 
 ...
