@@ -16,6 +16,6 @@ Imports:
     stats,
     magrittr,
     tidyverse,
-    TAM,
-    eRm    
+    TAM
+   
 

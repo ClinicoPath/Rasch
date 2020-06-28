@@ -12,7 +12,7 @@ items:
     - name:  items
       title: Item Statistics
       type:  Table
-      visible: (itotal || imeasure)
+      visible: (itotal || imeasure || infit || outfit)
       rows: (vars)
       clearWith:
         - vars
@@ -30,6 +30,13 @@ items:
         - name: measure
           title: measure
           visible: (imeasure)        
-   
+
+        - name: infit
+          title: infit
+          visible: (infit)  
+
+        - name: outfit
+          title: outfit
+          visible: (outfit)            
      
 ...

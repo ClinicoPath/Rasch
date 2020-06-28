@@ -30,3 +30,8 @@ children:
             name: itotal
           - type: CheckBox
             name: imeasure
+          - type: CheckBox
+            name: infit
+          - type: CheckBox
+            name: outfit
+            

@@ -8,7 +8,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         initialize = function(
             vars = NULL,
             itotal = TRUE,
-            imeasure = TRUE, ...) {
+            imeasure = TRUE,
+            infit = FALSE,
+            outfit = FALSE, ...) {
 
             super$initialize(
                 package='Rasch',
@@ -31,19 +33,33 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "imeasure",
                 imeasure,
                 default=TRUE)
+            private$..infit <- jmvcore::OptionBool$new(
+                "infit",
+                infit,
+                default=FALSE)
+            private$..outfit <- jmvcore::OptionBool$new(
+                "outfit",
+                outfit,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..itotal)
             self$.addOption(private$..imeasure)
+            self$.addOption(private$..infit)
+            self$.addOption(private$..outfit)
         }),
     active = list(
         vars = function() private$..vars$value,
         itotal = function() private$..itotal$value,
-        imeasure = function() private$..imeasure$value),
+        imeasure = function() private$..imeasure$value,
+        infit = function() private$..infit$value,
+        outfit = function() private$..outfit$value),
     private = list(
         ..vars = NA,
         ..itotal = NA,
-        ..imeasure = NA)
+        ..imeasure = NA,
+        ..infit = NA,
+        ..outfit = NA)
 )
 
 dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -67,7 +83,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="items",
                 title="Item Statistics",
-                visible="(itotal || imeasure)",
+                visible="(itotal || imeasure || infit || outfit)",
                 rows="(vars)",
                 clearWith=list(
                     "vars"),
@@ -84,7 +100,15 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     list(
                         `name`="measure", 
                         `title`="measure", 
-                        `visible`="(imeasure)"))))}))
+                        `visible`="(imeasure)"),
+                    list(
+                        `name`="infit", 
+                        `title`="infit", 
+                        `visible`="(infit)"),
+                    list(
+                        `name`="outfit", 
+                        `title`="outfit", 
+                        `visible`="(outfit)"))))}))
 
 dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "dichotomousBase",
@@ -113,6 +137,8 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param vars .
 #' @param itotal .
 #' @param imeasure .
+#' @param infit .
+#' @param outfit .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -130,7 +156,9 @@ dichotomous <- function(
     data,
     vars,
     itotal = TRUE,
-    imeasure = TRUE) {
+    imeasure = TRUE,
+    infit = FALSE,
+    outfit = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dichotomous requires jmvcore to be installed (restart may be required)')
@@ -145,7 +173,9 @@ dichotomous <- function(
     options <- dichotomousOptions$new(
         vars = vars,
         itotal = itotal,
-        imeasure = imeasure)
+        imeasure = imeasure,
+        infit = infit,
+        outfit = outfit)
 
     analysis <- dichotomousClass$new(
         options = options,

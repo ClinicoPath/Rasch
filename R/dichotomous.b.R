@@ -4,8 +4,8 @@
 # dichotomous model
 #' @importFrom R6 R6Class
 #' @import jmvcore
-#' @importFrom eRm RM 
 #' @importFrom TAM tam.jml
+#' @importFrom TAM tam.jml.fit
 #' @export
 
 
@@ -52,8 +52,7 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
 
 #======================================        
- 
-  .run = function() {
+ .run = function() {
 
             # `self$data` contains the data
             # `self$options` contains the options
@@ -62,16 +61,16 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
 # get variables---------------------------------
       
-    data <- self$data  
-    
-    vars <- self$options$get('vars')
-
-      
-      for(v in vars)
-      data[[v]] <- jmvcore::toNumeric(data[[v]])
-      
+     data <- self$data  
+     
+     vars <- self$options$get('vars')
+     
+       
+       for(v in vars)
+       data[[v]] <- jmvcore::toNumeric(data[[v]])
+       
                     
-# compute item measure with TAM package--------
+# compute item statistics with TAM package--------
       
     ready <- TRUE
     
@@ -80,10 +79,10 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     if (ready) {
       
- 
+    # data <- private$.cleanData()
       results <- private$.compute(data)
       
- #     private$.populateItemsTable(results)
+ # populate item table     
       
       private$.populateItemsTable(results)
    
@@ -96,23 +95,40 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
 .compute = function(data) {
   
+
+  # get variables---------------------------------
   
-      # estimate the Rasch model with JML (function 'tam.jml')
+  data <- self$data  
+  
+  vars <- self$options$get('vars')
+  
+  
+  for(v in vars)
+    data[[v]] <- jmvcore::toNumeric(data[[v]])
+  
+  
+    
+# estimate the Rasch model with JML using function 'tam.jml'
       
-      # estimate Item Total Score
+ # estimate Item Total Score(Sufficient Statistics)
   
       itotal <- TAM::tam.jml(resp=data)$ItemScore             
                     
-     # estimate item difficulty measure
+ # estimate item difficulty measure
       
       imeasure <-  TAM::tam.jml(resp=data)$xsi
       
-# eRm package------------
+
+      # computing infit statistics--------------------------------
+       
+      infit<- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$infitItem
+
+      #computing outfit statistics      
       
-   #   res<- eRm::RM(mydata)$betapar
-  
-  
-      return(list('itotal'=itotal, 'imeasure'=imeasure))
+      outfit <- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$outfitItem
+      
+      
+      return(list('itotal'=itotal, 'imeasure'=imeasure, 'infit'=infit, 'outfit'=outfit))
       
   },
 
@@ -129,7 +145,6 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
  
 
-      
 # populate item tables----------------------------
       
 .populateItemsTable = function(results) {
@@ -141,25 +156,42 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
  
   itotal <- results$itotal
   imeasure <- results$imeasure
+  infit <- results$infit
+  outfit <- results$outfit
   
   for (i in seq_along(items)) {
     
     row <- list()
 
     
-    row[["score"]] <- itotal[items[[i]]]
+    row[["score"]] <- itotal[i,1]
     
-    row[["measure"]] <- imeasure[items[[i]]]
+    row[["measure"]] <- imeasure[i]
+    
+    row[["infit"]] <- infit[i]
+    
+    row[["outfit"]] <- outfit[i]
+    
  #   row[["itemRestCor"]] <- alpha$item.stats[items[i],"r.drop"]
 #    row[["omega"]] <- omegaDrop[i]
     
-    table$setRow(rowKey=items[i], values=row)
-  }
+    table$setRow(rowKey=items[i], values=row)}
+  
+    }
+  
+  #### Helper functions ----
+  # .cleanData = function() {
+  #   
+  #   items <- self$options$vars
+  #   
+  #   data <- list()
+  #   for (item in items)
+  #     data[[item]] <- jmvcore::toNumeric(self$data[[item]])
+  #   
+  #   attr(data, 'row.names') <- seq_len(length(data[[1]]))
+  #   attr(data, 'class') <- 'data.frame'
+  #   data <- jmvcore::naOmit(data)
+  # 
+  #           }
 
-     
-                    
-        }
-
-
-)
-)
+))

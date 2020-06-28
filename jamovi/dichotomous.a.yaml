@@ -31,5 +31,15 @@ options:
       type: Bool
       default: True
 
+    - name: infit
+      title: Infit.Mnsq
+      type: Bool
+      default: false
+
+    - name: outfit
+      title: Outfit.Mnsq
+      type: Bool
+      default: false
+
 
 ...

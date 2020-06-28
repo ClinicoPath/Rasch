@@ -4,7 +4,14 @@
 \alias{dichotomous}
 \title{Dichotomous Model}
 \usage{
-dichotomous(data, vars, itotal = TRUE, imeasure = TRUE)
+dichotomous(
+  data,
+  vars,
+  itotal = TRUE,
+  imeasure = TRUE,
+  infit = FALSE,
+  outfit = FALSE
+)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -14,6 +21,10 @@ dichotomous(data, vars, itotal = TRUE, imeasure = TRUE)
 \item{itotal}{.}
 
 \item{imeasure}{.}
+
+\item{infit}{.}
+
+\item{outfit}{.}
 }
 \value{
 A results object containing:
