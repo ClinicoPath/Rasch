@@ -66,8 +66,8 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
      vars <- self$options$get('vars')
      
        
-       for(v in vars)
-       data[[v]] <- jmvcore::toNumeric(data[[v]])
+       # for(v in vars)
+       # data[[v]] <- jmvcore::toNumeric(data[[v]])
        
                     
 # compute item statistics with TAM package--------
@@ -79,8 +79,9 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     if (ready) {
       
-    # data <- private$.cleanData()
-      results <- private$.compute(data)
+     data <- private$.cleanData()
+    
+     results <- private$.compute(data)
       
  # populate item table     
       
@@ -103,12 +104,12 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   vars <- self$options$get('vars')
   
   
-  for(v in vars)
-    data[[v]] <- jmvcore::toNumeric(data[[v]])
+  # for(v in vars)
+  #   data[[v]] <- jmvcore::toNumeric(data[[v]])
+  # 
   
-  
-    
-# estimate the Rasch model with JML using function 'tam.jml'
+
+   ### estimate the Rasch model with JML using function 'tam.jml'=================
       
  # estimate Item Total Score(Sufficient Statistics)
   
@@ -119,20 +120,20 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       imeasure <-  TAM::tam.jml(resp=data)$xsi
       
 
-      # computing infit statistics--------------------------------
+# computing infit statistics--------------------------------
        
-      infit<- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$infitItem
+#  infit<- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$infitItem
 
-      #computing outfit statistics      
+#computing outfit statistics-----------------------      
       
-      outfit <- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$outfitItem
-      
-      
-      return(list('itotal'=itotal, 'imeasure'=imeasure, 'infit'=infit, 'outfit'=outfit))
-      
-  },
+#   outfit <- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$outfitItem
+  
+   
+  results <- list('itotal'=itotal, 'imeasure'=imeasure)
+     
+    },
 
-#### Init tables -----------------
+#### Init. tables ---------------------------------
    
    .initItemsTable = function() {
         
@@ -143,7 +144,6 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         
       },      
       
- 
 
 # populate item tables----------------------------
       
@@ -156,8 +156,9 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
  
   itotal <- results$itotal
   imeasure <- results$imeasure
-  infit <- results$infit
-  outfit <- results$outfit
+  
+#  infit <- results$infit
+#  outfit <- results$outfit
   
   for (i in seq_along(items)) {
     
@@ -168,30 +169,30 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     row[["measure"]] <- imeasure[i]
     
-    row[["infit"]] <- infit[i]
+#     row[["infit"]] <- infit[i]
+     
+#     row[["outfit"]] <- outfit[i]
     
-    row[["outfit"]] <- outfit[i]
-    
- #   row[["itemRestCor"]] <- alpha$item.stats[items[i],"r.drop"]
-#    row[["omega"]] <- omegaDrop[i]
-    
+ 
     table$setRow(rowKey=items[i], values=row)}
   
-    }
+    },
   
   #### Helper functions ----
-  # .cleanData = function() {
-  #   
-  #   items <- self$options$vars
-  #   
-  #   data <- list()
-  #   for (item in items)
-  #     data[[item]] <- jmvcore::toNumeric(self$data[[item]])
-  #   
-  #   attr(data, 'row.names') <- seq_len(length(data[[1]]))
-  #   attr(data, 'class') <- 'data.frame'
-  #   data <- jmvcore::naOmit(data)
-  # 
-  #           }
+ 
+ .cleanData = function() {
+     
+     items <- self$options$vars
+     
+     data <- list()
+  
+        for (item in items)
+       data[[item]] <- jmvcore::toNumeric(self$data[[item]])
+     
+     attr(data, 'row.names') <- seq_len(length(data[[1]]))
+     attr(data, 'class') <- 'data.frame'
+     data <- jmvcore::naOmit(data)
 
+     return(data)   
+          }
 ))
