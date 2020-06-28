@@ -66,8 +66,8 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
      vars <- self$options$get('vars')
      
        
-       # for(v in vars)
-       # data[[v]] <- jmvcore::toNumeric(data[[v]])
+     #   for(v in vars)
+    #    data[[v]] <- jmvcore::toNumeric(data[[v]])
        
                     
 # compute item statistics with TAM package--------
@@ -109,7 +109,7 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   # 
   
 
-   ### estimate the Rasch model with JML using function 'tam.jml'=================
+ ### estimate the Rasch model with JML using function 'tam.jml'=================
       
  # estimate Item Total Score(Sufficient Statistics)
   
@@ -122,14 +122,14 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
 # computing infit statistics--------------------------------
        
-#  infit<- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$infitItem
+  infit<- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$infitItem
 
 #computing outfit statistics-----------------------      
       
-#   outfit <- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$outfitItem
+   outfit <- TAM::tam.jml.fit(tamobj =TAM::tam.jml(resp=data))$fit.item$outfitItem
   
    
-  results <- list('itotal'=itotal, 'imeasure'=imeasure)
+  results <- list('itotal'=itotal, 'imeasure'=imeasure, 'infit'=infit, 'outfit'=outfit)
      
     },
 
@@ -157,8 +157,8 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   itotal <- results$itotal
   imeasure <- results$imeasure
   
-#  infit <- results$infit
-#  outfit <- results$outfit
+  infit <- results$infit
+  outfit <- results$outfit
   
   for (i in seq_along(items)) {
     
@@ -169,9 +169,9 @@ dichotomousClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     row[["measure"]] <- imeasure[i]
     
-#     row[["infit"]] <- infit[i]
-     
-#     row[["outfit"]] <- outfit[i]
+     row[["infit"]] <- infit[i]
+   
+     row[["outfit"]] <- outfit[i]
     
  
     table$setRow(rowKey=items[i], values=row)}
